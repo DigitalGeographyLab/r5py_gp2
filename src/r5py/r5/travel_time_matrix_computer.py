@@ -110,17 +110,7 @@ class TravelTimeMatrixComputer(BaseTravelTimeMatrixComputer):
         # add OSM IDs if found in results
         # osmIdsResults are generated when routing with custom_cost_transport_network
         if hasattr(results, "osmIdResults") and results.osmIdResults:
-            # use batching for larger sest to avoid memory issues
-            # only use batchinkg for large lists
-            if len(results.osmIdResults) > 1_000:
-                od_matrix["osm_ids"] = convert_java_lists_to_python_in_batches(
-                    results.osmIdResults
-                )
-            else:
-                osm_ids_python = [
-                    np.array(sublist).tolist() for sublist in results.osmIdResults
-                ]
-                od_matrix["osm_ids"] = osm_ids_python
+            od_matrix["osm_ids"] = results.osmIdResults
 
         # R5’s NULL value is MAX_INT32
         od_matrix = self._fill_nulls(od_matrix)
